@@ -15,3 +15,31 @@ nav.querySelectorAll('a').forEach((link) => {
     nav.classList.remove('is-open');
   });
 });
+
+const projectFilters = document.querySelectorAll('.project-filter');
+const projectCards = document.querySelectorAll('.experience-projects article');
+const projectCount = document.querySelector('.project-count');
+
+projectFilters.forEach((button) => {
+  button.addEventListener('click', () => {
+    const selectedFilter = button.dataset.filter;
+    let visibleCount = 0;
+
+    projectFilters.forEach((filterButton) => {
+      const isSelected = filterButton === button;
+      filterButton.classList.toggle('is-active', isSelected);
+      filterButton.setAttribute('aria-pressed', String(isSelected));
+    });
+
+    projectCards.forEach((card) => {
+      const isVisible = selectedFilter === 'all' || card.dataset.category === selectedFilter;
+      card.hidden = !isVisible;
+      if (!isVisible) card.querySelector('details')?.removeAttribute('open');
+      if (isVisible) visibleCount += 1;
+    });
+
+    if (projectCount) {
+      projectCount.textContent = `Showing ${visibleCount} ${visibleCount === 1 ? 'project' : 'projects'}`;
+    }
+  });
+});
